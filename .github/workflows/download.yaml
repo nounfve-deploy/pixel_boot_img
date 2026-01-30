@@ -1,0 +1,11 @@
+name: download_checksum
+
+jobs:
+  download_checksum:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "before download"
+      - name: Check out repository code
+        uses: actions/checkout@v5
+      - run: cat scripts/curl_sha256.sh| echo
+      - run: echo "after download"
