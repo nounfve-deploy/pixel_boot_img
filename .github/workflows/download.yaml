@@ -1,5 +1,10 @@
 name: download_checksum
-
+on:
+  workflow_dispatch:
+    environment:
+      description: 'Environment to deploy to'
+      required: true
+      type: 'string'
 jobs:
   download_checksum:
     runs-on: ubuntu-latest
