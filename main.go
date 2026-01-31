@@ -33,7 +33,7 @@ func main() {
 		fmt.Println("unmatched build")
 		return
 	}
-	// fmt.Printf("%#v\n", img)
+	fmt.Printf("%#v\n", img)
 	lastline := lib.Sh_curl_sha256.RunReturnLastLineSplit(img.Url)
 
 	zipFile := img.NewImageZip(lastline)
@@ -54,7 +54,7 @@ func collect_device_images() (devices map[string]*lib.Device) {
 
 		defer func() {
 			devices[d.CodeName] = d
-			fmt.Printf("[device] %#v\n", d)
+			// fmt.Printf("[device] %#v\n", d)
 		}()
 		table := h.DOM.Next().Find("table tbody tr")
 		table.Each(func(i int, s *goquery.Selection) {
@@ -64,7 +64,7 @@ func collect_device_images() (devices map[string]*lib.Device) {
 				return
 			}
 			d.Images = append(d.Images, img)
-			fmt.Printf("%#v\n", img)
+			// fmt.Printf("%#v\n", img)
 		})
 	})
 
