@@ -1,6 +1,6 @@
 name: download_boot_img
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       device:
         description: 'device code name , e.g.,"lynx"'

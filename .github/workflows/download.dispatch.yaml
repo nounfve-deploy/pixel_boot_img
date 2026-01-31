@@ -1,0 +1,19 @@
+name: download_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      device:
+        description: 'device code name , e.g.,"lynx"'
+        required: true
+        type: 'string'
+      tag:
+        description: 'build tag'
+        required: true
+        type: 'string'
+jobs:
+  download_dispatch:
+    uses: ./.github/workflows/download.reuse.yaml
+    with: 
+      device: ${{ github.event.inputs.device }}
+      tag: ${{ github.event.inputs.tag }}
+    secrets: inherit
