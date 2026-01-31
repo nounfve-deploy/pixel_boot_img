@@ -1,16 +1,33 @@
 name: download_checksum
 on:
   workflow_dispatch:
-    environment:
-      description: 'Environment to deploy to'
-      required: true
-      type: 'string'
+    inputs:
+      device:
+        description: 'device code name , e.g.,"lynx"'
+        required: true
+        type: 'string'
+      tag:
+        description: 'build tag'
+        required: true
+        type: 'string'
 jobs:
   download_checksum:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "before download"
       - name: Check out repository code
         uses: actions/checkout@v5
-      - run: ./scripts/curl_sha256.sh
+      - name: Set up Go ${{ matrix.go }}
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+      - run: echo "before download"
+      - run: ./scripts/run_in_wd.sh ${{ github.event.inputs.device }} ${{ github.event.inputs.tag }}
       - run: echo "after download"
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "dummy@.github.com"
+          git add -A
+          git commit -m "Automated changes from workflow"
+          git push
