@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
 	"os"
 	"pixel_boot_img/lib"
@@ -20,20 +21,20 @@ func main() {
 		fmt.Println("usage: pixel_boot_img [target] [build]")
 	}()
 	target, build := os.Args[1], os.Args[2]
-	fmt.Printf("%s %s\n", target, build)
+	slog.Info("cli input", "target", target, "build", build)
 
 	devices := collect_device_images()
 	d, ok := devices[target]
 	if !ok {
-		fmt.Println("unmatched device")
+		slog.Error("unmatched device")
 		return
 	}
 	img := d.FindImage(build)
 	if img == nil {
-		fmt.Println("unmatched build")
+		slog.Error("unmatched build")
 		return
 	}
-	fmt.Printf("%#v\n", img)
+	slog.Info("image to process", "image", img)
 	lastline := lib.Sh_curl_sha256.RunReturnLastLineSplit(img.Url)
 
 	zipFile := img.NewImageZip(lastline)
