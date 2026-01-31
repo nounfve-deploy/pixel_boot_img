@@ -1,6 +1,8 @@
 package lib
 
 import (
+	"fmt"
+	"os"
 	"regexp"
 	"strings"
 
@@ -52,6 +54,29 @@ func TryNewDevice(title string) (d *Device) {
 	return
 }
 
+func (d *Device) FindImage(build string) (i *Image) {
+	for _, img := range d.Images {
+		if img.Build == build {
+			i = img
+			break
+		}
+	}
+	return
+}
+
+func (d *Device) GetBuildStorePath(build string) (path string) {
+	root := os.Getenv("gitRoot")
+	if root == "" {
+		root = "."
+	}
+	path = fmt.Sprintf("%s/storage/%s/%s/", root, d.CodeName, build)
+	err := os.MkdirAll(path, 0755)
+	if err != nil {
+		panic(err)
+	}
+	return
+}
+
 func TryNewImageFromTr(tr *goquery.Selection) (i *Image) {
 	tds := make([]*goquery.Selection, 0)
 	tr.Find("td").Each(func(i int, td *goquery.Selection) {
@@ -76,5 +101,36 @@ func TryNewImageFromTr(tr *goquery.Selection) (i *Image) {
 	}
 
 	i = &Image{Build, Date, Url, Sha256}
+	return
+}
+
+type ImageZip struct {
+	Image
+	path string
+}
+
+func (i Image) NewImageZip(path_hash []string) (iz *ImageZip) {
+	if len(path_hash) != 2 {
+		return
+	}
+	path, hash := path_hash[0], path_hash[1]
+	if hash != i.Sha256 {
+		return
+	}
+	iz = &ImageZip{i, path}
+	return
+}
+
+func (iz *ImageZip) Unzip_boot_img() (bootImgs []string) {
+	inner_zip_pattern := fmt.Sprintf("*%s*.zip", strings.ToLower(iz.Build))
+	inner_zip := Sh_unzip_ls.RunReturnLastLineSplit(iz.path, inner_zip_pattern)
+
+	if len(inner_zip) != 1 {
+		fmt.Printf("%#v\n", inner_zip)
+		panic("multiple image found")
+	}
+
+	boot_img_pattern := fmt.Sprintf("%s*boot.img", "")
+	bootImgs = Sh_unzip_ls.RunReturnLastLineSplit(inner_zip[0], boot_img_pattern)
 	return
 }
