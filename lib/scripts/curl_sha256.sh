@@ -10,7 +10,7 @@ echo "[Url] ${url}"
 if [ -n "$Mocking"];then
   fname="akita-bp3a.250905.014-factory-47caa9a7.zip"
   sha_sum="47caa9a7e39670689f1746b7cf6c4770906eb69eff6977c5f03573fa62068697"
-  else
+else
   fname=$(curl --head --remote-name --write-out '%{filename_effective}\n' ${url})
   curl -o ${fname} ${url}
 

@@ -33,7 +33,7 @@ func main() {
 		fmt.Println("unmatched build")
 		return
 	}
-	fmt.Printf("%#v\n", img)
+	// fmt.Printf("%#v\n", img)
 	lastline := lib.Sh_curl_sha256.RunReturnLastLineSplit(img.Url)
 
 	zipFile := img.NewImageZip(lastline)
