@@ -1,4 +1,4 @@
-name: download_checksum
+name: download_boot_img
 on:
   workflow_dispatch:
     inputs:
@@ -11,7 +11,7 @@ on:
         required: true
         type: 'string'
 jobs:
-  download_checksum:
+  download_boot_img:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
