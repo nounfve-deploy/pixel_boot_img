@@ -1,0 +1,17 @@
+name: download_on_issue
+on:
+  issues:
+    types:
+      - opened
+      - reopened
+jobs:
+  parse_issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v5
+      - name: Set up Go ${{ matrix.go }}
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: "go.mod"
+      - run: ALT_MAIN=PARSE_ISSUE go run .

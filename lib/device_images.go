@@ -22,24 +22,6 @@ type Image struct {
 	Sha256 string
 }
 
-var (
-	TITLE_REGEX = regexp.MustCompile(`^"([^"]+)" for (.+)$`)
-	BUILD_REGEX = regexp.MustCompile(`^[^(]+\((.+)\)$`)
-
-	PARSE_BUILD_DATE = func(build_string string) (build, date string) {
-		subStr := BUILD_REGEX.FindStringSubmatch(build_string)
-		if len(subStr) != 2 {
-			return
-		}
-		subStr = strings.Split(subStr[1], ",")
-		if len(subStr) < 2 {
-			return
-		}
-		build, date = strings.Trim(subStr[0], " "), strings.Trim(subStr[1], " ")
-		return
-	}
-)
-
 func TryNewDevice(title string) (d *Device) {
 	match := TITLE_REGEX.FindStringSubmatch(title)
 	if len(match) != 3 {
@@ -134,3 +116,31 @@ func (iz *ImageZip) Unzip_boot_img() (bootImgs []string) {
 	bootImgs = Sh_unzip_ls.RunReturnLastLineSplit(inner_zip[0], boot_img_pattern)
 	return
 }
+
+var (
+	TITLE_REGEX   = regexp.MustCompile(`^"([^"]+)" for (.+)$`)
+	BUILD_REGEX   = regexp.MustCompile(`^[^(]+\((.+)\)$`)
+	ZIP_URL_REGEX = regexp.MustCompile(`^.+\/([^-]+)-([^-]+)-.+\.zip$`)
+
+	PARSE_BUILD_DATE = func(build_string string) (build, date string) {
+		subStr := BUILD_REGEX.FindStringSubmatch(build_string)
+		if len(subStr) != 2 {
+			return
+		}
+		subStr = strings.Split(subStr[1], ",")
+		if len(subStr) < 2 {
+			return
+		}
+		build, date = strings.Trim(subStr[0], " "), strings.Trim(subStr[1], " ")
+		return
+	}
+
+	PARSE_DOWNLOAD_URL = func(url string) (deviceCode, build string) {
+		subStr := ZIP_URL_REGEX.FindStringSubmatch(url)
+		if len(subStr) != 3 {
+			return
+		}
+		deviceCode, build = subStr[1], subStr[2]
+		return
+	}
+)

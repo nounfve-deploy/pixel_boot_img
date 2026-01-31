@@ -19,3 +19,10 @@ func TestBuildRegex(t *testing.T) {
 	assert.Equal(t, build, "BD3A.251005.003.F1")
 	assert.Equal(t, date, "Oct 2025")
 }
+
+func TestUrlRegex(t *testing.T) {
+	url := `https://dl.google.com/dl/android/aosp/rango-bp4a.260105.004.e1-factory-0765b33a.zip`
+	device, build := lib.PARSE_DOWNLOAD_URL(url)
+	assert.Equal(t, device, "rango")
+	assert.Equal(t, build, "bp4a.260105.004.e1")
+}
