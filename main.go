@@ -17,7 +17,7 @@ func main() {
 		if r == nil {
 			return
 		}
-		fmt.Println("Recovered from panic:", r)
+		slog.Error("Recovered from panic", "error", r)
 		fmt.Println("usage: pixel_boot_img [target] [build]")
 	}()
 	target, build := os.Args[1], os.Args[2]
@@ -27,19 +27,29 @@ func main() {
 	d, ok := devices[target]
 	if !ok {
 		slog.Error("unmatched device")
-		return
+		panic(-1)
 	}
 	img := d.FindImage(build)
 	if img == nil {
 		slog.Error("unmatched build")
-		return
+		panic(-1)
 	}
 	slog.Info("image to process", "image", img)
-	lastline := lib.Sh_curl_sha256.RunReturnLastLineSplit(img.Url)
-
-	zipFile := img.NewImageZip(lastline)
-	_ = zipFile.Unzip_boot_img()
 	storagePath := d.GetBuildStorePath(img.Build)
+	if dir, err := os.ReadDir(storagePath); len(dir) != 0 || err != nil {
+		slog.Error("build storage not empty", "dir", dir, "err", err)
+		return
+	}
+
+	// download and get hash
+	lastline := lib.Sh_curl_sha256.RunReturnLastLineSplit(img.Url)
+	zipFile := img.NewImageZip(lastline)
+	if zipFile == nil {
+		slog.Error("failed to download zip or verify sha256")
+		panic(-1)
+	}
+
+	_ = zipFile.Unzip_boot_img()
 	lib.Sh_cp.Run("init_boot.img", storagePath)
 }
 
