@@ -32,6 +32,6 @@ jobs:
     if: ${{ needs.parse_issue.outputs.device != '' && needs.parse_issue.outputs.tag != '' }}
     uses: ./.github/workflows/download.reuse.yaml
     with: 
-      device: ${{needs.parse_issue.outputs.device}}
-      tag: ${{needs.parse_issue.outputs.tag}}
+      device: "${{needs.parse_issue.outputs.device}}"
+      tag: "${{needs.parse_issue.outputs.tag}}"
     secrets: inherit
