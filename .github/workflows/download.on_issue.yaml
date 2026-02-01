@@ -29,7 +29,6 @@ jobs:
           echo "${{needs.parse_issue.outputs.tag}}"
   call_reuse:
     needs: [parse_issue]
-    if: ${{ needs.parse_issue.outputs.device != '' && needs.parse_issue.outputs.tag != '' }}
     uses: ./.github/workflows/download.reuse.yaml
     with:
       device: ${{ needs.parse_issue.outputs.device }}
