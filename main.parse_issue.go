@@ -50,6 +50,6 @@ func parse_issue() {
 }
 
 func action_output(K, V string) {
-	echo := fmt.Sprintf(`echo "%s==%s" >> $GITHUB_OUTPUT`, K, V)
+	echo := fmt.Sprintf(`echo "%s=%s" >> $GITHUB_OUTPUT`, K, V)
 	exec.Command("bash", "-c", echo).Run()
 }

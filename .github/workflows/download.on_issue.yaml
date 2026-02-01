@@ -19,11 +19,19 @@ jobs:
           go-version-file: "go.mod"
       - id: parser
         run: ALT_MAIN=PARSE_ISSUE go run . '${{ github.event.issue.body }}'
-  call_reuse:
+  echo_output:
     runs-on: ubuntu-latest
     needs: parse_issue
     steps:
-      - name: echo
+      - name: echo_input
         run: |
           echo "${{needs.parse_issue.outputs.device}}"
           echo "${{needs.parse_issue.outputs.tag}}"
+  call_reuse:
+    needs: parse_issue
+    if: ${{ needs.parse_issue.outputs.device != '' && needs.parse_issue.outputs.tag != '' }}
+    uses: ./.github/workflows/download.reuse.yaml
+    with: 
+      device: ${{needs.parse_issue.outputs.device}}
+      tag: ${{needs.parse_issue.outputs.tag}}
+    secrets: inherit
