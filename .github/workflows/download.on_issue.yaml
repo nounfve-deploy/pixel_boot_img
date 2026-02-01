@@ -14,4 +14,4 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version-file: "go.mod"
-      - run: ALT_MAIN=PARSE_ISSUE go run . ${{ github.event.issue.body }}
+      - run: ALT_MAIN=PARSE_ISSUE go run . '${{ github.event.issue.body }}'
