@@ -37,6 +37,7 @@ func TryNewDevice(title string) (d *Device) {
 }
 
 func (d *Device) FindImage(build string) (i *Image) {
+	build = strings.ToUpper(build)
 	for _, img := range d.Images {
 		if img.Build == build {
 			i = img
