@@ -32,11 +32,11 @@ func parse_issue() {
 	fmt.Println(body)
 	fmt.Println("==============-body-==============")
 
-	lines := strings.Split(body, "\r\n")
+	lines := strings.Split(body, "\n")
 	lines = slices.DeleteFunc(lines, func(line string) bool { return line == "" })
 	lasline := ""
 	if len(lines) > 0 {
-		lasline = lines[0]
+		lasline = lines[len(lines)-1]
 	}
 
 	device, tag := lib.PARSE_DOWNLOAD_URL(lasline)
