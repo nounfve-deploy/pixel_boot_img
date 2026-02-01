@@ -25,8 +25,8 @@ jobs:
           cache: true
       - name: echo_input
         run: |
-          echo "${{ github.event.inputs.device }}"
-          echo "${{ github.event.inputs.tag }}"
+          echo "${{needs.parse_issue.outputs.device}}"
+          echo "${{needs.parse_issue.outputs.tag}}"
       - run: ./scripts/run_in_wd.sh ${{ github.event.inputs.device }} ${{ github.event.inputs.tag }}
       - name: Commit and push changes
         run: |
