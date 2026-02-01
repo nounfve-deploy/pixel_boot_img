@@ -32,6 +32,4 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "dummy@.github.com"
-          git add -A
-          git commit -m "Automated changes from workflow"
-          git push
+          ./scripts/commit_push.sh
