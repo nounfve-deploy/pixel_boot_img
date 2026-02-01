@@ -23,9 +23,11 @@ jobs:
         with:
           go-version-file: 'go.mod'
           cache: true
-      - run: echo "before download"
+      - name: echo_input
+        run: |
+          echo "${{ github.event.inputs.device }}"
+          echo "${{ github.event.inputs.tag }}"
       - run: ./scripts/run_in_wd.sh ${{ github.event.inputs.device }} ${{ github.event.inputs.tag }}
-      - run: echo "after download"
       - name: Commit and push changes
         run: |
           git config --global user.name "github-actions[bot]"
