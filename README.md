@@ -1,6 +1,6 @@
 ## pixel_boot_img
 automaton download and extract `init_boot.img` from pixel factory image,
-Which used by magisk.
+which used by magisk.
 
 ## usage
 to trigger a download and processing for a factory image, `open(reopen)` a issue which has a factory image link download link as last line of issue body.
