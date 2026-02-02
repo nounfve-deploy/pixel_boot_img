@@ -28,7 +28,7 @@ jobs:
           echo "${{needs.parse_issue.outputs.device}}"
           echo "${{needs.parse_issue.outputs.tag}}"
   call_reuse:
-    # disbale since can't pass from need?
+    # disbale since can't pass from need (?)
     if: ${{ false }}
     needs: [parse_issue]
     uses: ./.github/workflows/download.reuse.yaml
@@ -39,6 +39,9 @@ jobs:
   download_boot_img_copied:
     needs: [parse_issue]
     runs-on: ubuntu-latest
+    concurrency:
+      group: download_boot_img_reuse
+      cancel-in-progress: false
     steps:
       - name: Check out repository code
         uses: actions/checkout@v5

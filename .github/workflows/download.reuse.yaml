@@ -13,6 +13,9 @@ on:
 jobs:
   download_boot_img:
     runs-on: ubuntu-latest
+    concurrency:
+      group: download_boot_img_reuse
+      cancel-in-progress: false
     steps:
       - name: Check out repository code
         uses: actions/checkout@v5
